@@ -47,6 +47,26 @@ RSpec.describe StatusesHelper do
       end
     end
 
+    context 'with a status that is public_unlisted' do
+      let(:status) { Status.new(visibility: 'public_unlisted') }
+
+      it 'returns the correct fa icon' do
+        result = helper.visibility_icon(status)
+
+        expect(result).to match('cloud')
+      end
+    end
+
+    context 'with a status that is login' do
+      let(:status) { Status.new(visibility: 'login') }
+
+      it 'returns the correct fa icon' do
+        result = helper.visibility_icon(status)
+
+        expect(result).to match('key')
+      end
+    end
+
     context 'with a status that is unlisted' do
       let(:status) { Status.new(visibility: 'unlisted') }
 
@@ -74,6 +94,16 @@ RSpec.describe StatusesHelper do
         result = helper.visibility_icon(status)
 
         expect(result).to match('alternate_email')
+      end
+    end
+
+    context 'with a status that is limited' do
+      let(:status) { Status.new(visibility: 'limited') }
+
+      it 'returns the correct fa icon' do
+        result = helper.visibility_icon(status)
+
+        expect(result).to match('shield')
       end
     end
   end
