@@ -31,11 +31,14 @@ module FormattingHelper
   end
 
   def status_content_format(status)
-    html_aware_format(status.text, status.local?, markdown: status.markdown, preloaded_accounts: [status.account] + (status.respond_to?(:active_mentions) ? status.active_mentions.map(&:account) : []))
-  end
+    MastodonOTELTracer.in_span('HtmlAwareFormatter rendering') do |span|
+      span.add_attributes(
+        'app.formatter.content.type' => 'status',
+        'app.formatter.content.origin' => status.local? ? 'local' : 'remote'
+      )
 
-  def emoji_name_format(emoji_reaction, status)
-    html_aware_format(emoji_reaction['url'].present? ? ":#{emoji_reaction['name']}:" : emoji_reaction['name'], status.local?, markdown: status.markdown)
+      html_aware_format(status.text, status.local?, markdown: status.markdown, preloaded_accounts: [status.account] + (status.respond_to?(:active_mentions) ? status.active_mentions.map(&:account) : []))
+    end
   end
 
   def rss_status_content_format(status)
@@ -47,7 +50,14 @@ module FormattingHelper
   end
 
   def account_bio_format(account)
-    html_aware_format(account.note, account.local?, markdown: account.user&.setting_bio_markdown)
+    MastodonOTELTracer.in_span('HtmlAwareFormatter rendering') do |span|
+      span.add_attributes(
+        'app.formatter.content.type' => 'account_bio',
+        'app.formatter.content.origin' => account.local? ? 'local' : 'remote'
+      )
+
+      html_aware_format(account.note, account.local?, markdown: account.user&.setting_bio_markdown)
+    end
   end
 
   def account_field_value_format(field, with_rel_me: true)
