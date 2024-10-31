@@ -53,6 +53,7 @@ class ActivityPub::ProcessStatusUpdateService < BaseService
         update_immediate_attributes!
         update_metadata!
         validate_status_mentions!
+        update_counts!
         create_edits!
       end
 
@@ -73,6 +74,7 @@ class ActivityPub::ProcessStatusUpdateService < BaseService
     with_redis_lock("create:#{@uri}") do
       update_poll!(allow_significant_changes: false)
       queue_poll_notifications!
+      update_counts!
     end
   end
 
@@ -339,6 +341,19 @@ class ActivityPub::ProcessStatusUpdateService < BaseService
     end.compact
 
     @local_referred_accounts = local_referred_statuses.map(&:account)
+  end
+
+  def update_counts!
+    likes = @status_parser.favourites_count
+    shares =  @status_parser.reblogs_count
+    return if likes.nil? && shares.nil?
+
+    @status.status_stat.tap do |status_stat|
+      status_stat.untrusted_reblogs_count = shares unless shares.nil?
+      status_stat.untrusted_favourites_count = likes unless likes.nil?
+
+      status_stat.save if status_stat.changed?
+    end
   end
 
   def expected_type?
