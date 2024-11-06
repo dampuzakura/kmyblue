@@ -24,6 +24,7 @@ export const allNotificationTypes = [
   'admin.report',
   'moderation_warning',
   'severed_relationships',
+  'annual_report',
 ];
 
 export type NotificationWithStatusType =
@@ -44,7 +45,8 @@ export type NotificationType =
   | 'moderation_warning'
   | 'severed_relationships'
   | 'admin.sign_up'
-  | 'admin.report';
+  | 'admin.report'
+  | 'annual_report';
 
 export interface NotifyEmojiReactionJSON {
   name: string;
@@ -158,6 +160,15 @@ interface AccountRelationshipSeveranceNotificationJSON
   event: ApiAccountRelationshipSeveranceEventJSON;
 }
 
+export interface ApiAnnualReportEventJSON {
+  year: string;
+}
+
+interface AnnualReportNotificationGroupJSON extends BaseNotificationGroupJSON {
+  type: 'annual_report';
+  annual_report: ApiAnnualReportEventJSON;
+}
+
 export type ApiNotificationJSON =
   | SimpleNotificationJSON
   | ReportNotificationJSON
@@ -170,7 +181,8 @@ export type ApiNotificationGroupJSON =
   | ReportNotificationGroupJSON
   | AccountRelationshipSeveranceNotificationGroupJSON
   | NotificationGroupWithStatusJSON
-  | ModerationWarningNotificationGroupJSON;
+  | ModerationWarningNotificationGroupJSON
+  | AnnualReportNotificationGroupJSON;
 
 export interface ApiNotificationGroupsResultJSON {
   accounts: ApiAccountJSON[];

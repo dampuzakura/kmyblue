@@ -1,6 +1,7 @@
 import type {
   ApiAccountRelationshipSeveranceEventJSON,
   ApiAccountWarningJSON,
+  ApiAnnualReportEventJSON,
   BaseNotificationGroupJSON,
   ApiNotificationGroupJSON,
   ApiNotificationJSON,
@@ -91,6 +92,12 @@ export interface NotificationGroupSeveredRelationships
   event: AccountRelationshipSeveranceEvent;
 }
 
+type AnnualReportEvent = ApiAnnualReportEventJSON;
+export interface NotificationGroupAnnualReport
+  extends BaseNotification<'annual_report'> {
+  annualReport: AnnualReportEvent;
+}
+
 interface Report extends Omit<ApiReportJSON, 'target_account'> {
   targetAccountId: string;
 }
@@ -115,7 +122,8 @@ export type NotificationGroup =
   | NotificationGroupModerationWarning
   | NotificationGroupSeveredRelationships
   | NotificationGroupAdminSignUp
-  | NotificationGroupAdminReport;
+  | NotificationGroupAdminReport
+  | NotificationGroupAnnualReport;
 
 function createReportFromJSON(reportJSON: ApiReportJSON): Report {
   const { target_account, ...report } = reportJSON;
@@ -153,6 +161,12 @@ function createEmojiReactionGroupsFromJSON(
       sampleAccountIds,
     },
   ];
+}
+
+function createAnnualReportEventFromJSON(
+  eventJson: ApiAnnualReportEventJSON,
+): AnnualReportEvent {
+  return eventJson;
 }
 
 export function createNotificationGroupFromJSON(
@@ -213,12 +227,19 @@ export function createNotificationGroupFromJSON(
         event: createAccountRelationshipSeveranceEventFromJSON(group.event),
         sampleAccountIds,
       };
-
     case 'moderation_warning': {
       const { moderation_warning, ...groupWithoutModerationWarning } = group;
       return {
         ...groupWithoutModerationWarning,
         moderationWarning: createAccountWarningFromJSON(moderation_warning),
+        sampleAccountIds,
+      };
+    }
+    case 'annual_report': {
+      const { annual_report, ...groupWithoutAnnualReport } = group;
+      return {
+        ...groupWithoutAnnualReport,
+        annualReport: createAnnualReportEventFromJSON(annual_report),
         sampleAccountIds,
       };
     }
