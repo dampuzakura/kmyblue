@@ -53,6 +53,7 @@ export const DetailedStatus: React.FC<{
   domain: string;
   showMedia?: boolean;
   withLogo?: boolean;
+  overrideDisplayName?: React.ReactNode;
   pictureInPicture: any;
   onToggleHidden?: (status: any) => void;
   onToggleMediaVisibility?: () => void;
@@ -69,6 +70,7 @@ export const DetailedStatus: React.FC<{
   domain,
   showMedia,
   withLogo,
+  overrideDisplayName,
   pictureInPicture,
   onToggleMediaVisibility,
   onToggleHidden,
@@ -403,7 +405,11 @@ export const DetailedStatus: React.FC<{
           <div className='detailed-status__display-avatar'>
             <Avatar account={status.get('account')} size={46} />
           </div>
-          <DisplayName account={status.get('account')} localDomain={domain} />
+
+          {overrideDisplayName ?? (
+            <DisplayName account={status.get('account')} localDomain={domain} />
+          )}
+
           {withLogo && (
             <>
               <div className='spacer' />
