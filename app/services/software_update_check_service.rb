@@ -27,7 +27,7 @@ class SoftwareUpdateCheckService < BaseService
   end
 
   def api_url
-    ENV.fetch('UPDATE_CHECK_URL', 'https://kmy.blue/update-check')
+    Rails.configuration.x.mastodon.software_update_url
   end
 
   def version

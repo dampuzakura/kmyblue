@@ -163,6 +163,7 @@ class Status < ApplicationRecord
   scope :distributable_visibility, -> { where(visibility: %i(public public_unlisted login unlisted)) }
   scope :distributable_visibility_for_anonymous, -> { where(visibility: %i(public public_unlisted unlisted)) }
   scope :list_eligible_visibility, -> { where(visibility: %i(public public_unlisted login unlisted private)) }
+  scope :not_direct_visibility, -> { where.not(visibility: :direct) }
 
   after_create_commit :trigger_create_webhooks
   after_update_commit :trigger_update_webhooks
