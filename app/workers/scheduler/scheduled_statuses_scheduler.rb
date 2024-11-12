@@ -31,7 +31,7 @@ class Scheduler::ScheduledStatusesScheduler
   end
 
   def expired_statuses
-    ScheduledExpirationStatus.where(scheduled_at: ..Time.now.utc + PostStatusService::MIN_SCHEDULE_OFFSET)
+    ScheduledExpirationStatus.where(scheduled_at: ..time_due_at)
   end
 
   def publish_scheduled_announcements!
