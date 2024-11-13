@@ -6,8 +6,6 @@ class PostStatusService < BaseService
   include DtlHelper
   include NgRuleHelper
 
-  MIN_SCHEDULE_OFFSET = 5.minutes.freeze
-
   class UnexpectedMentionsError < StandardError
     attr_reader :accounts
 
