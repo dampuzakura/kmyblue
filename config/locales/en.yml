@@ -1104,6 +1104,7 @@ en:
       open: Open post
       original_status: Original post
       reblogs: Reblogs
+      remove: Remove
       remove_history: Remove edit history
       remove_media: Remove medias
       replied_to_html: Replied to %{acct_link}
