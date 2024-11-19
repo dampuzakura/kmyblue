@@ -1088,6 +1088,7 @@ ja:
       open: 投稿を開く
       original_status: オリジナルの投稿
       reblogs: ブースト
+      remove: 削除
       remove_history: 編集履歴を削除
       remove_media: メディアを削除
       replied_to_html: "%{acct_link}さんへの返信"
