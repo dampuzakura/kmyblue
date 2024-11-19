@@ -405,24 +405,11 @@ class Status extends ImmutablePureComponent {
     };
 
     let media, statusAvatar, prepend, rebloggedByText;
-    const matchedFilters = status.get('matched_filters');
-    const expanded = (!matchedFilters || this.state.showDespiteFilter) && (!status.get('hidden') || status.get('spoiler_text').length === 0);
-
-    if (hidden) {
-      return (
-        <HotKeys handlers={handlers} tabIndex={unfocusable ? null : -1}>
-          <div ref={this.handleRef} className={classNames('status__wrapper', { focusable: !this.props.muted })} tabIndex={unfocusable ? null : 0}>
-            <span>{status.getIn(['account', 'display_name']) || status.getIn(['account', 'username'])}</span>
-            {status.get('spoiler_text').length > 0 && (<span>{status.get('spoiler_text')}</span>)}
-            {expanded && <span>{status.get('content')}</span>}
-          </div>
-        </HotKeys>
-      );
-    }
 
     const connectUp = previousId && previousId === status.get('in_reply_to_id');
     const connectToRoot = rootId && rootId === status.get('in_reply_to_id');
     const connectReply = nextInReplyToId && nextInReplyToId === status.get('id');
+    const matchedFilters = status.get('matched_filters');
 
     let visibilityName = status.get('limited_scope') || status.get('visibility_ex') || status.get('visibility');
 
@@ -462,9 +449,23 @@ class Status extends ImmutablePureComponent {
     }
 
     if (account === undefined || account === null) {
-      statusAvatar = <Avatar account={status.get('account')} size={46} />;
+      statusAvatar = <Avatar account={status.get('account')} size={avatarSize} />;
     } else {
       statusAvatar = <AvatarOverlay account={status.get('account')} friend={account} />;
+    }
+    
+    const expanded = (!matchedFilters || this.state.showDespiteFilter) && (!status.get('hidden') || status.get('spoiler_text').length === 0);
+
+    if (hidden) {
+      return (
+        <HotKeys handlers={handlers} tabIndex={unfocusable ? null : -1}>
+          <div ref={this.handleRef} className={classNames('status__wrapper', { focusable: !this.props.muted })} tabIndex={unfocusable ? null : 0}>
+            <span>{status.getIn(['account', 'display_name']) || status.getIn(['account', 'username'])}</span>
+            {status.get('spoiler_text').length > 0 && (<span>{status.get('spoiler_text')}</span>)}
+            {expanded && <span>{status.get('content')}</span>}
+          </div>
+        </HotKeys>
+      );
     }
 
     if (pictureInPicture.get('inUse')) {
@@ -571,12 +572,6 @@ class Status extends ImmutablePureComponent {
       if (emojiReactions.size > 0 && enableEmojiReaction && emojiReactionAvailableServer) {
         emojiReactionsBar = <StatusEmojiReactionsBar emojiReactions={emojiReactions} myReactionOnly={!isShowItem('emoji_reaction_on_timeline')} status={status} onEmojiReact={this.props.onEmojiReact} onUnEmojiReact={this.props.onUnEmojiReact} />;
       }
-    }
-
-    if (account === undefined || account === null) {
-      statusAvatar = <Avatar account={status.get('account')} size={avatarSize} />;
-    } else {
-      statusAvatar = <AvatarOverlay account={status.get('account')} friend={account} />;
     }
 
     const {statusContentProps, hashtagBar} = getHashtagBarForStatus(status);
