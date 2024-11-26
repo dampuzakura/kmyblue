@@ -65,22 +65,30 @@ import {
   FollowedTags,
   LinkTimeline,
   ListTimeline,
+  Lists,
+  ListEdit,
+  ListMembers,
   Blocks,
   DomainBlocks,
   Mutes,
   PinnedStatuses,
-  Lists,
   Antennas,
   Circles,
   CircleStatuses,
   AntennaSetting,
-  Directory,
-  Explore,
-  ReactionDeck,
-  Onboarding,
   About,
   PrivacyPolicy,
   CommunityTimeline,
+  AntennaEdit,
+  AntennaExcludeMembers,
+  AntennaMembers,
+  CircleEdit,
+  CircleMembers,
+  BookmarkCategoryEdit,
+  ReactionDeck,
+  Onboarding,
+  Directory,
+  Explore,
 } from './util/async-components';
 import { ColumnsContextProvider } from './util/columns_context';
 import { WrappedSwitch, WrappedRoute } from './util/react_router_helpers';
@@ -220,9 +228,23 @@ class SwitchingColumnsArea extends PureComponent {
             <WrappedRoute path={['/conversations', '/timelines/direct']} component={DirectTimeline} content={children} />
             <WrappedRoute path='/tags/:id' component={HashtagTimeline} content={children} />
             <WrappedRoute path='/links/:url' component={LinkTimeline} content={children} />
+            <WrappedRoute path='/lists/new' component={ListEdit} content={children} />
+            <WrappedRoute path='/lists/:id/edit' component={ListEdit} content={children} />
+            <WrappedRoute path='/lists/:id/members' component={ListMembers} content={children} />
             <WrappedRoute path='/lists/:id' component={ListTimeline} content={children} />
+            <WrappedRoute path='/antennas/new' component={AntennaEdit} content={children} />
+            <WrappedRoute path='/antennas/:id/edit' component={AntennaEdit} content={children} />
+            <WrappedRoute path='/antennas/:id/members' component={AntennaMembers} content={children} />
+            <WrappedRoute path='/antennas/:id/exclude_members' component={AntennaExcludeMembers} content={children} />
             <WrappedRoute path='/antennasw/:id' component={AntennaSetting} content={children} />
             <WrappedRoute path='/antennast/:id' component={AntennaTimeline} content={children} />
+            <WrappedRoute path='/circles/new' component={CircleEdit} content={children} />
+            <WrappedRoute path='/circles/:id/edit' component={CircleEdit} content={children} />
+            <WrappedRoute path='/circles/:id/members' component={CircleMembers} content={children} />
+            <WrappedRoute path='/circles/:id' component={CircleStatuses} content={children} />
+            <WrappedRoute path='/bookmark_categories/new' component={BookmarkCategoryEdit} content={children} />
+            <WrappedRoute path='/bookmark_categories/:id/edit' component={BookmarkCategoryEdit} content={children} />
+            <WrappedRoute path='/bookmark_categories/:id' component={BookmarkCategoryStatuses} content={children} />
             <WrappedRoute path='/notifications' component={NotificationsWrapper} content={children} exact />
             <WrappedRoute path='/notifications/requests' component={NotificationRequests} content={children} exact />
             <WrappedRoute path='/notifications/requests/:id' component={NotificationRequest} content={children} exact />
@@ -230,8 +252,6 @@ class SwitchingColumnsArea extends PureComponent {
             <WrappedRoute path='/emoji_reactions' component={EmojiReactedStatuses} content={children} />
 
             <WrappedRoute path='/bookmarks' component={BookmarkedStatuses} content={children} />
-            <WrappedRoute path='/bookmark_categories/:id' component={BookmarkCategoryStatuses} content={children} />
-            <WrappedRoute path='/bookmark_categories' component={BookmarkCategories} content={children} />
             <WrappedRoute path='/pinned' component={PinnedStatuses} content={children} />
             
             <WrappedRoute path='/reaction_deck' component={ReactionDeck} content={children} />
@@ -270,8 +290,8 @@ class SwitchingColumnsArea extends PureComponent {
             <WrappedRoute path='/mutes' component={Mutes} content={children} />
             <WrappedRoute path='/lists' component={Lists} content={children} />
             <WrappedRoute path='/antennasw' component={Antennas} content={children} />
-            <WrappedRoute path='/circles/:id' component={CircleStatuses} content={children} />
             <WrappedRoute path='/circles' component={Circles} content={children} />
+            <WrappedRoute path='/bookmark_categories' component={BookmarkCategories} content={children} />
 
             <Route component={BundleColumnError} />
           </WrappedSwitch>
