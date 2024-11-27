@@ -12,14 +12,14 @@ import ArrowBackIcon from '@/material-icons/400-24px/arrow_back.svg?react';
 import AntennaIcon from '@/material-icons/400-24px/wifi.svg?react';
 import SquigglyArrow from '@/svg-icons/squiggly_arrow.svg?react';
 import { fetchFollowing } from 'mastodon/actions/accounts';
+import { fetchAntenna } from 'mastodon/actions/antennas';
 import { importFetchedAccounts } from 'mastodon/actions/importer';
-import { fetchList } from 'mastodon/actions/lists';
 import { apiRequest } from 'mastodon/api';
 import {
   apiGetAccounts,
-  apiAddAccountToList,
-  apiRemoveAccountFromList,
-} from 'mastodon/api/lists';
+  apiAddAccountToAntenna,
+  apiRemoveAccountFromAntenna,
+} from 'mastodon/api/antennas';
 import type { ApiAccountJSON } from 'mastodon/api_types/accounts';
 import { Avatar } from 'mastodon/components/avatar';
 import { Button } from 'mastodon/components/button';
@@ -36,14 +36,20 @@ import { me } from 'mastodon/initial_state';
 import { useAppDispatch, useAppSelector } from 'mastodon/store';
 
 const messages = defineMessages({
-  heading: { id: 'column.list_members', defaultMessage: 'Manage list members' },
+  heading: {
+    id: 'column.antenna_members',
+    defaultMessage: 'Manage antenna members',
+  },
   placeholder: {
-    id: 'lists.search_placeholder',
+    id: 'antennas.search_placeholder',
     defaultMessage: 'Search people you follow',
   },
-  enterSearch: { id: 'lists.add_to_list', defaultMessage: 'Add to list' },
-  add: { id: 'lists.add_member', defaultMessage: 'Add' },
-  remove: { id: 'lists.remove_member', defaultMessage: 'Remove' },
+  enterSearch: {
+    id: 'antennas.add_to_antenna',
+    defaultMessage: 'Add to antenna',
+  },
+  add: { id: 'antennas.add_member', defaultMessage: 'Add' },
+  remove: { id: 'antennas.remove_member', defaultMessage: 'Remove' },
   back: { id: 'column_back_button.label', defaultMessage: 'Back' },
 });
 
@@ -99,22 +105,22 @@ const ColumnSearchHeader: React.FC<{
 
 const AccountItem: React.FC<{
   accountId: string;
-  listId: string;
-  partOfList: boolean;
+  antennaId: string;
+  partOfAntenna: boolean;
   onToggle: (accountId: string) => void;
-}> = ({ accountId, listId, partOfList, onToggle }) => {
+}> = ({ accountId, antennaId, partOfAntenna, onToggle }) => {
   const intl = useIntl();
   const account = useAppSelector((state) => state.accounts.get(accountId));
 
   const handleClick = useCallback(() => {
-    if (partOfList) {
-      void apiRemoveAccountFromList(listId, accountId);
+    if (partOfAntenna) {
+      void apiRemoveAccountFromAntenna(antennaId, accountId);
     } else {
-      void apiAddAccountToList(listId, accountId);
+      void apiAddAccountToAntenna(antennaId, accountId);
     }
 
     onToggle(accountId);
-  }, [accountId, listId, partOfList, onToggle]);
+  }, [accountId, antennaId, partOfAntenna, onToggle]);
 
   if (!account) {
     return null;
@@ -154,7 +160,7 @@ const AccountItem: React.FC<{
         <div className='account__relationship'>
           <Button
             text={intl.formatMessage(
-              partOfList ? messages.remove : messages.add,
+              partOfAntenna ? messages.remove : messages.add,
             )}
             onClick={handleClick}
           />
@@ -164,16 +170,13 @@ const AccountItem: React.FC<{
   );
 };
 
-const ListMembers: React.FC<{
+const AntennaMembers: React.FC<{
   multiColumn?: boolean;
 }> = ({ multiColumn }) => {
   const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
   const intl = useIntl();
 
-  const followingAccountIds = useAppSelector(
-    (state) => state.user_lists.getIn(['following', me, 'items']) as string[],
-  );
   const [searching, setSearching] = useState(false);
   const [accountIds, setAccountIds] = useState<string[]>([]);
   const [searchAccountIds, setSearchAccountIds] = useState<string[]>([]);
@@ -183,7 +186,7 @@ const ListMembers: React.FC<{
   useEffect(() => {
     if (id) {
       setLoading(true);
-      dispatch(fetchList(id));
+      dispatch(fetchAntenna(id));
 
       void apiGetAccounts(id)
         .then((data) => {
@@ -211,9 +214,9 @@ const ListMembers: React.FC<{
 
   const handleAccountToggle = useCallback(
     (accountId: string) => {
-      const partOfList = accountIds.includes(accountId);
+      const partOfAntenna = accountIds.includes(accountId);
 
-      if (partOfList) {
+      if (partOfAntenna) {
         setAccountIds(accountIds.filter((id) => id !== accountId));
       } else {
         setAccountIds([accountId, ...accountIds]);
@@ -244,7 +247,6 @@ const ListMembers: React.FC<{
         params: {
           q: value,
           resolve: false,
-          following: true,
         },
       })
         .then((data) => {
@@ -266,7 +268,7 @@ const ListMembers: React.FC<{
   let displayedAccountIds: string[];
 
   if (mode === 'add') {
-    displayedAccountIds = searching ? searchAccountIds : followingAccountIds;
+    displayedAccountIds = searching ? searchAccountIds : accountIds;
   } else {
     displayedAccountIds = accountIds;
   }
@@ -279,7 +281,7 @@ const ListMembers: React.FC<{
       {mode === 'remove' ? (
         <ColumnHeader
           title={intl.formatMessage(messages.heading)}
-          icon='list-ul'
+          icon='antenna-ul'
           iconComponent={AntennaIcon}
           multiColumn={multiColumn}
           showBackButton
@@ -303,7 +305,7 @@ const ListMembers: React.FC<{
       )}
 
       <ScrollableList
-        scrollKey='list_members'
+        scrollKey='antenna_members'
         trackScroll={!multiColumn}
         bindToDocument={!multiColumn}
         isLoading={loading}
@@ -315,8 +317,8 @@ const ListMembers: React.FC<{
               {displayedAccountIds.length > 0 && <div className='spacer' />}
 
               <div className='column-footer'>
-                <Link to={`/lists/${id}`} className='button button--block'>
-                  <FormattedMessage id='lists.done' defaultMessage='Done' />
+                <Link to={`/antennasw/${id}`} className='button button--block'>
+                  <FormattedMessage id='antennas.done' defaultMessage='Done' />
                 </Link>
               </div>
             </>
@@ -327,12 +329,12 @@ const ListMembers: React.FC<{
             <>
               <span>
                 <FormattedMessage
-                  id='lists.no_members_yet'
+                  id='antennas.no_members_yet'
                   defaultMessage='No members yet.'
                 />
                 <br />
                 <FormattedMessage
-                  id='lists.find_users_to_add'
+                  id='antennas.find_users_to_add'
                   defaultMessage='Find users to add'
                 />
               </span>
@@ -341,7 +343,7 @@ const ListMembers: React.FC<{
             </>
           ) : (
             <FormattedMessage
-              id='lists.no_results_found'
+              id='antennas.no_results_found'
               defaultMessage='No results found.'
             />
           )
@@ -351,8 +353,8 @@ const ListMembers: React.FC<{
           <AccountItem
             key={accountId}
             accountId={accountId}
-            listId={id}
-            partOfList={
+            antennaId={id}
+            partOfAntenna={
               displayedAccountIds === accountIds ||
               accountIds.includes(accountId)
             }
@@ -370,4 +372,4 @@ const ListMembers: React.FC<{
 };
 
 // eslint-disable-next-line import/no-default-export
-export default ListMembers;
+export default AntennaMembers;

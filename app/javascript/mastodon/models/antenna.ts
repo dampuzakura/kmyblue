@@ -14,17 +14,7 @@ const AntennaFactory = Record<AntennaShape>({
   insert_feeds: false,
   with_media_only: false,
   ignore_reblog: false,
-  accounts_count: 0,
-  domains_count: 0,
-  tags_count: 0,
-  keywords_count: 0,
   list: null,
-  domains: undefined,
-  keywords: undefined,
-  tags: undefined,
-  exclude_domains: undefined,
-  exclude_keywords: undefined,
-  exclude_tags: undefined,
   list_id: undefined,
 });
 

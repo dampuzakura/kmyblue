@@ -11,32 +11,16 @@ import {
   ANTENNA_FETCH_FAIL,
   ANTENNAS_FETCH_SUCCESS,
   ANTENNA_DELETE_SUCCESS,
+  ANTENNA_EDITOR_FETCH_DOMAINS_SUCCESS,
+  //ANTENNA_EDITOR_FETCH_KEYWORDS_SUCCESS,
+  //ANTENNA_EDITOR_FETCH_TAGS_SUCCESS,
 } from '../actions/antennas';
 
 const initialState = ImmutableMap<string, Antenna | null>();
 type State = typeof initialState;
 
-const normalizeAntenna = (state: State, antenna: ApiAntennaJSON) => {
-  let s = state.set(antenna.id, createAntennaFromJSON(antenna));
-
-  const old = state.get(antenna.id);
-  if (old === undefined) {
-    return s;
-  }
-
-  if (old) {
-    s = s.setIn([antenna.id, 'domains'], old.get('domains'));
-    s = s.setIn([antenna.id, 'exclude_domains'], old.get('exclude_domains'));
-    s = s.setIn([antenna.id, 'keywords'], old.get('keywords'));
-    s = s.setIn([antenna.id, 'exclude_keywords'], old.get('exclude_keywords'));
-    s = s.setIn([antenna.id, 'tags'], old.get('tags'));
-    s = s.setIn([antenna.id, 'exclude_tags'], old.get('exclude_tags'));
-    s = s.setIn([antenna.id, 'accounts_count'], old.get('accounts_count'));
-    s = s.setIn([antenna.id, 'domains_count'], old.get('domains_count'));
-    s = s.setIn([antenna.id, 'keywords_count'], old.get('keywords_count'));
-  }
-  return s;
-};
+const normalizeAntenna = (state: State, antenna: ApiAntennaJSON) =>
+  state.set(antenna.id, createAntennaFromJSON(antenna));
 
 const normalizeAntennas = (state: State, antennas: ApiAntennaJSON[]) => {
   antennas.forEach((antenna) => {
@@ -64,6 +48,16 @@ export const antennasReducer: Reducer<State> = (
       case ANTENNA_DELETE_SUCCESS:
       case ANTENNA_FETCH_FAIL:
         return state.set(action.id as string, null);
+      case ANTENNA_EDITOR_FETCH_DOMAINS_SUCCESS:
+        return state
+          .setIn(
+            ['domains', action.id],
+            (action.domains as { domains: string[] }).domains,
+          )
+          .setIn(
+            ['exclude_domains', action.id],
+            (action.domains as { exclude_domains: string[] }).exclude_domains,
+          );
       default:
         return state;
     }

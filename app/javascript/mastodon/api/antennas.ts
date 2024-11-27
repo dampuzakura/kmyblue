@@ -28,6 +28,16 @@ export const apiGetDomains = (antennaId: string) =>
     limit: 0,
   });
 
+export const apiAddDomain = (antennaId: string, domain: string) =>
+  apiRequestPost(`v1/antennas/${antennaId}/domains`, {
+    domains: [domain],
+  });
+
+export const apiRemoveDomain = (antennaId: string, domain: string) =>
+  apiRequestDelete(`v1/antennas/${antennaId}/domains`, {
+    domains: [domain],
+  });
+
 export const apiGetExcludeDomains = (antennaId: string) =>
   apiRequestGet<string[]>(`v1/antennas/${antennaId}/exclude_domains`, {
     limit: 0,
