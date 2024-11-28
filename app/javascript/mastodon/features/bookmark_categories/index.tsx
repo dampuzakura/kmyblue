@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 
 import AddIcon from '@/material-icons/400-24px/add.svg?react';
 import BookmarkIcon from '@/material-icons/400-24px/bookmark-fill.svg?react';
+import BookmarksIcon from '@/material-icons/400-24px/bookmarks.svg?react';
 import MoreHorizIcon from '@/material-icons/400-24px/more_horiz.svg?react';
 import SquigglyArrow from '@/svg-icons/squiggly_arrow.svg?react';
 import { fetchBookmarkCategories } from 'mastodon/actions/bookmark_categories';
@@ -144,6 +145,20 @@ const BookmarkCategories: React.FC<{
         scrollKey='bookmark_categories'
         emptyMessage={emptyMessage}
         bindToDocument={!multiColumn}
+        alwaysPrepend
+        prepend={
+          <div className='lists__item'>
+            <Link to={'/bookmarks'} className='lists__item__title'>
+              <Icon id='bookmarks' icon={BookmarksIcon} />
+              <span>
+                <FormattedMessage
+                  id='bookmark_categories.all_bookmarks'
+                  defaultMessage='All bookmarks'
+                />
+              </span>
+            </Link>
+          </div>
+        }
       >
         {bookmark_categories.map((bookmark_category) => (
           <BookmarkCategoryItem

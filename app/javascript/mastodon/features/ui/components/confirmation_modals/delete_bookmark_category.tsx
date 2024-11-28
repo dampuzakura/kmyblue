@@ -43,7 +43,7 @@ export const ConfirmDeleteBookmarkCategoryModal: React.FC<
     if (columnId) {
       dispatch(removeColumn(columnId));
     } else {
-      history.push('/bookmark_categorys');
+      history.push('/bookmark_categories');
     }
   }, [dispatch, history, columnId, bookmark_categoryId]);
 

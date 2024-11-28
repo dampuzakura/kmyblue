@@ -53,7 +53,7 @@ import {
   DirectTimeline,
   HashtagTimeline,
   AntennaTimeline,
-  NotificationsWrapper,
+  Notifications,
   NotificationRequests,
   NotificationRequest,
   FollowRequests,
@@ -76,6 +76,10 @@ import {
   Circles,
   CircleStatuses,
   AntennaSetting,
+  Directory,
+  OnboardingProfile,
+  OnboardingFollows,
+  Explore,
   About,
   PrivacyPolicy,
   CommunityTimeline,
@@ -85,9 +89,6 @@ import {
   CircleMembers,
   BookmarkCategoryEdit,
   ReactionDeck,
-  Onboarding,
-  Directory,
-  Explore,
 } from './util/async-components';
 import { ColumnsContextProvider } from './util/columns_context';
 import { WrappedSwitch, WrappedRoute } from './util/react_router_helpers';
@@ -244,7 +245,7 @@ class SwitchingColumnsArea extends PureComponent {
             <WrappedRoute path='/bookmark_categories/new' component={BookmarkCategoryEdit} content={children} />
             <WrappedRoute path='/bookmark_categories/:id/edit' component={BookmarkCategoryEdit} content={children} />
             <WrappedRoute path='/bookmark_categories/:id' component={BookmarkCategoryStatuses} content={children} />
-            <WrappedRoute path='/notifications' component={NotificationsWrapper} content={children} exact />
+            <WrappedRoute path='/notifications' component={Notifications} content={children} exact />
             <WrappedRoute path='/notifications/requests' component={NotificationRequests} content={children} exact />
             <WrappedRoute path='/notifications/requests/:id' component={NotificationRequest} content={children} exact />
             <WrappedRoute path='/favourites' component={FavouritedStatuses} content={children} />
@@ -255,7 +256,8 @@ class SwitchingColumnsArea extends PureComponent {
             
             <WrappedRoute path='/reaction_deck' component={ReactionDeck} content={children} />
 
-            <WrappedRoute path='/start' component={Onboarding} content={children} />
+            <WrappedRoute path={['/start', '/start/profile']} exact component={OnboardingProfile} content={children} />
+            <WrappedRoute path='/start/follows' component={OnboardingFollows} content={children} />
             <WrappedRoute path='/directory' component={Directory} content={children} />
             <WrappedRoute path={['/explore', '/search']} component={Explore} content={children} />
             <WrappedRoute path={['/publish', '/statuses/new']} component={Compose} content={children} />

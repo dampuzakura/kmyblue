@@ -6,18 +6,24 @@ import { isFulfilled } from '@reduxjs/toolkit';
 
 import BookmarkIcon from '@/material-icons/400-24px/bookmark-fill.svg?react';
 import CloseIcon from '@/material-icons/400-24px/close.svg?react';
-import { fetchBookmarkCategories } from 'mastodon/actions/bookmark_categories';
-import { createBookmarkCategory } from 'mastodon/actions/bookmark_categories_typed';
 import {
-  apiGetAccountBookmarkCategories,
-  apiAddAccountToBookmarkCategory,
-  apiRemoveAccountFromBookmarkCategory,
+  bookmarkCategoryEditorAddSuccess,
+  bookmarkCategoryEditorRemoveSuccess,
+  fetchBookmarkCategories,
+} from 'mastodon/actions/bookmark_categories';
+import { createBookmarkCategory } from 'mastodon/actions/bookmark_categories_typed';
+import { unbookmark } from 'mastodon/actions/interactions';
+import {
+  apiGetStatusBookmarkCategories,
+  apiAddStatusToBookmarkCategory,
+  apiRemoveStatusFromBookmarkCategory,
 } from 'mastodon/api/bookmark_categories';
 import type { ApiBookmarkCategoryJSON } from 'mastodon/api_types/bookmark_categories';
 import { Button } from 'mastodon/components/button';
 import { CheckBox } from 'mastodon/components/check_box';
 import { Icon } from 'mastodon/components/icon';
 import { IconButton } from 'mastodon/components/icon_button';
+import { bookmarkCategoryNeeded } from 'mastodon/initial_state';
 import { getOrderedBookmarkCategories } from 'mastodon/selectors/bookmark_categories';
 import { useAppDispatch, useAppSelector } from 'mastodon/store';
 
@@ -123,6 +129,8 @@ const BookmarkCategoryAdder: React.FC<{
   const bookmark_categories = useAppSelector((state) =>
     getOrderedBookmarkCategories(state),
   );
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return
+  const status = useAppSelector((state) => state.statuses.get(statusId));
   const [bookmark_categoryIds, setBookmarkCategoryIds] = useState<string[]>(
     [] as string[],
   );
@@ -130,7 +138,7 @@ const BookmarkCategoryAdder: React.FC<{
   useEffect(() => {
     dispatch(fetchBookmarkCategories());
 
-    apiGetAccountBookmarkCategories(statusId)
+    apiGetStatusBookmarkCategories(statusId)
       .then((data) => {
         setBookmarkCategoryIds(data.map((l) => l.id));
         return '';
@@ -148,32 +156,53 @@ const BookmarkCategoryAdder: React.FC<{
           ...currentBookmarkCategoryIds,
         ]);
 
-        apiAddAccountToBookmarkCategory(bookmark_categoryId, statusId).catch(
-          () => {
+        apiAddStatusToBookmarkCategory(bookmark_categoryId, statusId)
+          .then(() => {
+            dispatch(
+              bookmarkCategoryEditorAddSuccess(bookmark_categoryId, statusId),
+            );
+            return true;
+          })
+          .catch(() => {
             setBookmarkCategoryIds((currentBookmarkCategoryIds) =>
               currentBookmarkCategoryIds.filter(
                 (id) => id !== bookmark_categoryId,
               ),
             );
-          },
-        );
+          });
       } else {
         setBookmarkCategoryIds((currentBookmarkCategoryIds) =>
           currentBookmarkCategoryIds.filter((id) => id !== bookmark_categoryId),
         );
 
-        apiRemoveAccountFromBookmarkCategory(
-          bookmark_categoryId,
-          statusId,
-        ).catch(() => {
-          setBookmarkCategoryIds((currentBookmarkCategoryIds) => [
-            bookmark_categoryId,
-            ...currentBookmarkCategoryIds,
-          ]);
-        });
+        apiRemoveStatusFromBookmarkCategory(bookmark_categoryId, statusId)
+          .then(() => {
+            dispatch(
+              bookmarkCategoryEditorRemoveSuccess(
+                bookmark_categoryId,
+                statusId,
+              ),
+            );
+
+            if (
+              bookmarkCategoryNeeded &&
+              bookmark_categoryIds.filter((id) => id !== bookmark_categoryId)
+                .length === 0
+            ) {
+              dispatch(unbookmark(status));
+            }
+
+            return true;
+          })
+          .catch(() => {
+            setBookmarkCategoryIds((currentBookmarkCategoryIds) => [
+              bookmark_categoryId,
+              ...currentBookmarkCategoryIds,
+            ]);
+          });
       }
     },
-    [setBookmarkCategoryIds, statusId],
+    [setBookmarkCategoryIds, statusId, dispatch, bookmark_categoryIds, status],
   );
 
   const handleCreate = useCallback(
@@ -183,7 +212,7 @@ const BookmarkCategoryAdder: React.FC<{
         ...currentBookmarkCategoryIds,
       ]);
 
-      apiAddAccountToBookmarkCategory(bookmark_category.id, statusId).catch(
+      apiAddStatusToBookmarkCategory(bookmark_category.id, statusId).catch(
         () => {
           setBookmarkCategoryIds((currentBookmarkCategoryIds) =>
             currentBookmarkCategoryIds.filter(

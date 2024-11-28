@@ -19,7 +19,7 @@ export const apiUpdate = (bookmarkCategory: Partial<ApiBookmarkCategoryJSON>) =>
     bookmarkCategory,
   );
 
-export const apiGetAccounts = (bookmarkCategoryId: string) =>
+export const apiGetStatuses = (bookmarkCategoryId: string) =>
   apiRequestGet<ApiAccountJSON[]>(
     `v1/bookmark_categories/${bookmarkCategoryId}/statuses`,
     {
@@ -27,23 +27,23 @@ export const apiGetAccounts = (bookmarkCategoryId: string) =>
     },
   );
 
-export const apiGetAccountBookmarkCategories = (accountId: string) =>
+export const apiGetStatusBookmarkCategories = (accountId: string) =>
   apiRequestGet<ApiBookmarkCategoryJSON[]>(
     `v1/statuses/${accountId}/bookmark_categories`,
   );
 
-export const apiAddAccountToBookmarkCategory = (
+export const apiAddStatusToBookmarkCategory = (
   bookmarkCategoryId: string,
-  accountId: string,
+  statusId: string,
 ) =>
   apiRequestPost(`v1/bookmark_categories/${bookmarkCategoryId}/statuses`, {
-    account_ids: [accountId],
+    status_ids: [statusId],
   });
 
-export const apiRemoveAccountFromBookmarkCategory = (
+export const apiRemoveStatusFromBookmarkCategory = (
   bookmarkCategoryId: string,
-  accountId: string,
+  statusId: string,
 ) =>
   apiRequestDelete(`v1/bookmark_categories/${bookmarkCategoryId}/statuses`, {
-    account_ids: [accountId],
+    status_ids: [statusId],
   });
