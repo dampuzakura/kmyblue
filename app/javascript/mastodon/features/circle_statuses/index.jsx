@@ -84,10 +84,7 @@ class CircleStatuses extends ImmutablePureComponent {
   };
 
   handleEditClick = () => {
-    this.props.dispatch(openModal({
-      modalType: 'CIRCLE_EDITOR',
-      modalProps: { circleId: this.props.params.id },
-    }));
+    this.props.history.push(`/circles/${this.props.params.id}/edit`);
   };
 
   handleDeleteClick = () => {

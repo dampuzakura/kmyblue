@@ -26,15 +26,15 @@ const messages = defineMessages({
   },
   create: {
     id: 'bookmark_categories.create_bookmark_category',
-    defaultMessage: 'Create bookmark_category',
+    defaultMessage: 'Create category',
   },
   edit: {
     id: 'bookmark_categories.edit',
-    defaultMessage: 'Edit bookmark_category',
+    defaultMessage: 'Edit category',
   },
   delete: {
     id: 'bookmark_categories.delete',
-    defaultMessage: 'Delete bookmark_category',
+    defaultMessage: 'Delete category',
   },
   more: { id: 'status.more', defaultMessage: 'More' },
 });
@@ -49,7 +49,7 @@ const BookmarkCategoryItem: React.FC<{
   const handleDeleteClick = useCallback(() => {
     dispatch(
       openModal({
-        modalType: 'CONFIRM_DELETE_LIST',
+        modalType: 'CONFIRM_DELETE_BOOKMARK_CATEGORY',
         modalProps: {
           bookmark_categoryId: id,
         },

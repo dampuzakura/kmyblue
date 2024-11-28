@@ -80,7 +80,6 @@ import {
   PrivacyPolicy,
   CommunityTimeline,
   AntennaEdit,
-  AntennaExcludeMembers,
   AntennaMembers,
   CircleEdit,
   CircleMembers,
@@ -235,9 +234,9 @@ class SwitchingColumnsArea extends PureComponent {
             <WrappedRoute path='/antennas/new' component={AntennaEdit} content={children} />
             <WrappedRoute path='/antennas/:id/edit' component={AntennaEdit} content={children} />
             <WrappedRoute path='/antennas/:id/members' component={AntennaMembers} content={children} />
-            <WrappedRoute path='/antennas/:id/exclude_members' component={AntennaExcludeMembers} content={children} />
-            <WrappedRoute path='/antennasw/:id' component={AntennaSetting} content={children} />
-            <WrappedRoute path='/antennast/:id' component={AntennaTimeline} content={children} />
+            <WrappedRoute path='/antennas/:id/exclude_members' component={AntennaMembers} componentParams={{ isExclude: true }} content={children} />
+            <WrappedRoute path='/antennas/:id/filtering' component={AntennaSetting} content={children} />
+            <WrappedRoute path='/antennas/:id' component={AntennaTimeline} content={children} />
             <WrappedRoute path='/circles/new' component={CircleEdit} content={children} />
             <WrappedRoute path='/circles/:id/edit' component={CircleEdit} content={children} />
             <WrappedRoute path='/circles/:id/members' component={CircleMembers} content={children} />
@@ -289,7 +288,7 @@ class SwitchingColumnsArea extends PureComponent {
             <WrappedRoute path='/followed_tags' component={FollowedTags} content={children} />
             <WrappedRoute path='/mutes' component={Mutes} content={children} />
             <WrappedRoute path='/lists' component={Lists} content={children} />
-            <WrappedRoute path='/antennasw' component={Antennas} content={children} />
+            <WrappedRoute path='/antennas' component={Antennas} content={children} />
             <WrappedRoute path='/circles' component={Circles} content={children} />
             <WrappedRoute path='/bookmark_categories' component={BookmarkCategories} content={children} />
 

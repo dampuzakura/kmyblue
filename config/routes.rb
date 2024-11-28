@@ -28,8 +28,7 @@ Rails.application.routes.draw do
     /public/remote
     /conversations
     /lists/(*any)
-    /antennasw/(*any)
-    /antennast/(*any)
+    /antennas/(*any)
     /circles/(*any)
     /links/(*any)
     /notifications/(*any)
@@ -213,7 +212,6 @@ Rails.application.routes.draw do
       end
     end
   end
-  resources :antennas, except: [:show]
 
   resource :relationships, only: [:show, :update]
   resources :severed_relationships, only: [:index] do

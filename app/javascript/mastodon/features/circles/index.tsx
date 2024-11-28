@@ -37,7 +37,7 @@ const CircleItem: React.FC<{
   const handleDeleteClick = useCallback(() => {
     dispatch(
       openModal({
-        modalType: 'CONFIRM_DELETE_LIST',
+        modalType: 'CONFIRM_DELETE_CIRCLE',
         modalProps: {
           circleId: id,
         },

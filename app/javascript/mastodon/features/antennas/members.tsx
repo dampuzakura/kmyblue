@@ -19,6 +19,9 @@ import {
   apiGetAccounts,
   apiAddAccountToAntenna,
   apiRemoveAccountFromAntenna,
+  apiRemoveExcludeAccountFromAntenna,
+  apiAddExcludeAccountToAntenna,
+  apiGetExcludeAccounts,
 } from 'mastodon/api/antennas';
 import type { ApiAccountJSON } from 'mastodon/api_types/accounts';
 import { Avatar } from 'mastodon/components/avatar';
@@ -107,20 +110,27 @@ const AccountItem: React.FC<{
   accountId: string;
   antennaId: string;
   partOfAntenna: boolean;
+  isExclude?: boolean;
   onToggle: (accountId: string) => void;
-}> = ({ accountId, antennaId, partOfAntenna, onToggle }) => {
+}> = ({ accountId, antennaId, partOfAntenna, isExclude, onToggle }) => {
   const intl = useIntl();
   const account = useAppSelector((state) => state.accounts.get(accountId));
 
   const handleClick = useCallback(() => {
     if (partOfAntenna) {
-      void apiRemoveAccountFromAntenna(antennaId, accountId);
+      const api = isExclude
+        ? apiRemoveExcludeAccountFromAntenna
+        : apiRemoveAccountFromAntenna;
+      void api(antennaId, accountId);
     } else {
-      void apiAddAccountToAntenna(antennaId, accountId);
+      const api = isExclude
+        ? apiAddExcludeAccountToAntenna
+        : apiAddAccountToAntenna;
+      void api(antennaId, accountId);
     }
 
     onToggle(accountId);
-  }, [accountId, antennaId, partOfAntenna, onToggle]);
+  }, [accountId, antennaId, partOfAntenna, onToggle, isExclude]);
 
   if (!account) {
     return null;
@@ -171,8 +181,9 @@ const AccountItem: React.FC<{
 };
 
 const AntennaMembers: React.FC<{
+  isExclude?: boolean;
   multiColumn?: boolean;
-}> = ({ multiColumn }) => {
+}> = ({ isExclude, multiColumn }) => {
   const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
   const intl = useIntl();
@@ -188,7 +199,8 @@ const AntennaMembers: React.FC<{
       setLoading(true);
       dispatch(fetchAntenna(id));
 
-      void apiGetAccounts(id)
+      const api = isExclude ? apiGetExcludeAccounts : apiGetAccounts;
+      void api(id)
         .then((data) => {
           dispatch(importFetchedAccounts(data));
           setAccountIds(data.map((a) => a.id));
@@ -201,7 +213,7 @@ const AntennaMembers: React.FC<{
 
       dispatch(fetchFollowing(me));
     }
-  }, [dispatch, id]);
+  }, [dispatch, id, isExclude]);
 
   const handleSearchClick = useCallback(() => {
     setMode('add');
@@ -317,7 +329,10 @@ const AntennaMembers: React.FC<{
               {displayedAccountIds.length > 0 && <div className='spacer' />}
 
               <div className='column-footer'>
-                <Link to={`/antennasw/${id}`} className='button button--block'>
+                <Link
+                  to={`/antennas/${id}/filtering`}
+                  className='button button--block'
+                >
                   <FormattedMessage id='antennas.done' defaultMessage='Done' />
                 </Link>
               </div>
@@ -358,6 +373,7 @@ const AntennaMembers: React.FC<{
               displayedAccountIds === accountIds ||
               accountIds.includes(accountId)
             }
+            isExclude={isExclude}
             onToggle={handleAccountToggle}
           />
         ))}

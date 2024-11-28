@@ -34,14 +34,15 @@ const AntennaItem: React.FC<{
   title: string;
   insert_feeds: boolean;
   isList: boolean;
-}> = ({ id, title, insert_feeds, isList }) => {
+  listTitle?: string;
+}> = ({ id, title, insert_feeds, isList, listTitle }) => {
   const dispatch = useAppDispatch();
   const intl = useIntl();
 
   const handleDeleteClick = useCallback(() => {
     dispatch(
       openModal({
-        modalType: 'CONFIRM_DELETE_LIST',
+        modalType: 'CONFIRM_DELETE_ANTENNA',
         modalProps: {
           antennaId: id,
         },
@@ -58,15 +59,18 @@ const AntennaItem: React.FC<{
   );
 
   return (
-    <div className='antennas__item'>
-      <Link to={`/antennas/${id}`} className='antennas__item__title'>
+    <div className='lists__item'>
+      <Link to={`/antennas/${id}`} className='lists__item__title'>
         <Icon id='antenna-ul' icon={AntennaIcon} />
         <span>{title}</span>
-        {insert_feeds
-          ? intl.formatMessage(
-              isList ? messages.insert_list : messages.insert_home,
-            )
-          : undefined}
+        {insert_feeds ? (
+          <span className='column-link__badge'>
+            {isList
+              ? (listTitle?.slice(0, 4) ??
+                intl.formatMessage(messages.insert_list))
+              : intl.formatMessage(messages.insert_home)}
+          </span>
+        ) : undefined}
       </Link>
 
       <DropdownMenuContainer
@@ -144,6 +148,7 @@ const Antennas: React.FC<{
             title={antenna.title}
             insert_feeds={antenna.insert_feeds}
             isList={!!antenna.list}
+            listTitle={antenna.list?.title}
           />
         ))}
       </ScrollableList>

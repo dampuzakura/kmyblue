@@ -30,7 +30,8 @@ const messages = defineMessages({
 const ListItem: React.FC<{
   id: string;
   title: string;
-}> = ({ id, title }) => {
+  antennaTitles?: string[];
+}> = ({ id, title, antennaTitles }) => {
   const dispatch = useAppDispatch();
   const intl = useIntl();
 
@@ -58,6 +59,11 @@ const ListItem: React.FC<{
       <Link to={`/lists/${id}`} className='lists__item__title'>
         <Icon id='list-ul' icon={ListAltIcon} />
         <span>{title}</span>
+        {antennaTitles?.map((at) => (
+          <span key={at} className='column-link__badge'>
+            {at.slice(0, 4)}
+          </span>
+        ))}
       </Link>
 
       <DropdownMenuContainer
@@ -129,7 +135,12 @@ const Lists: React.FC<{
         bindToDocument={!multiColumn}
       >
         {lists.map((list) => (
-          <ListItem key={list.id} id={list.id} title={list.title} />
+          <ListItem
+            key={list.id}
+            id={list.id}
+            title={list.title}
+            antennaTitles={list.antennas.map((a) => a.title)}
+          />
         ))}
       </ScrollableList>
 

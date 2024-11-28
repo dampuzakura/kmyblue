@@ -16,6 +16,7 @@ import { fetchLists } from 'mastodon/actions/lists';
 import Column from 'mastodon/components/column';
 import { ColumnHeader } from 'mastodon/components/column_header';
 import { LoadingIndicator } from 'mastodon/components/loading_indicator';
+import { getOrderedLists } from 'mastodon/selectors/lists';
 import { useAppDispatch, useAppSelector } from 'mastodon/store';
 
 const messages = defineMessages({
@@ -27,12 +28,12 @@ const FiltersLink: React.FC<{
   id: string;
 }> = ({ id }) => {
   return (
-    <Link to={`/antennasw/${id}`} className='app-form__link'>
+    <Link to={`/antennas/${id}/filtering`} className='app-form__link'>
       <div className='app-form__link__text'>
         <strong>
           <FormattedMessage
             id='antennas.filter_items'
-            defaultMessage='Antenna filtering'
+            defaultMessage='Antenna filter settings'
           />
         </strong>
       </div>
@@ -51,7 +52,7 @@ const NewAntenna: React.FC<{
   const antenna = useAppSelector((state) =>
     id ? state.antennas.get(id) : undefined,
   );
-  const lists = useAppSelector((state) => state.lists);
+  const lists = useAppSelector((state) => getOrderedLists(state));
   const [title, setTitle] = useState('');
   const [stl, setStl] = useState(false);
   const [ltl, setLtl] = useState(false);
@@ -59,6 +60,8 @@ const NewAntenna: React.FC<{
   const [listId, setListId] = useState('');
   const [withMediaOnly, setWithMediaOnly] = useState(false);
   const [ignoreReblog, setIgnoreReblog] = useState(false);
+  const [mode, setMode] = useState('filtering');
+  const [destination, setDestination] = useState('home');
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -74,9 +77,27 @@ const NewAntenna: React.FC<{
       setStl(antenna.stl);
       setLtl(antenna.ltl);
       setInsertFeeds(antenna.insert_feeds);
-      setListId(antenna.list?.id ?? '');
+      setListId(antenna.list?.id ?? '0');
       setWithMediaOnly(antenna.with_media_only);
       setIgnoreReblog(antenna.ignore_reblog);
+
+      if (antenna.stl) {
+        setMode('stl');
+      } else if (antenna.ltl) {
+        setMode('ltl');
+      } else {
+        setMode('filtering');
+      }
+
+      if (antenna.insert_feeds) {
+        if (antenna.list) {
+          setDestination('list');
+        } else {
+          setDestination('home');
+        }
+      } else {
+        setDestination('timeline');
+      }
     }
   }, [
     setTitle,
@@ -86,6 +107,8 @@ const NewAntenna: React.FC<{
     setListId,
     setWithMediaOnly,
     setIgnoreReblog,
+    setMode,
+    setDestination,
     id,
     antenna,
     lists,
@@ -98,29 +121,6 @@ const NewAntenna: React.FC<{
     [setTitle],
   );
 
-  /*
-  const handleStlChange = useCallback(
-    ({ target: { checked } }: React.ChangeEvent<HTMLInputElement>) => {
-      setStl(checked);
-    },
-    [setStl],
-  );
-
-  const handleLtlChange = useCallback(
-    ({ target: { checked } }: React.ChangeEvent<HTMLInputElement>) => {
-      setLtl(checked);
-    },
-    [setLtl],
-  );
-  */
-
-  const handleInsertFeedsChange = useCallback(
-    ({ target: { checked } }: React.ChangeEvent<HTMLInputElement>) => {
-      setInsertFeeds(checked);
-    },
-    [setInsertFeeds],
-  );
-
   const handleListIdChange = useCallback(
     ({ target: { value } }: React.ChangeEvent<HTMLSelectElement>) => {
       setListId(value);
@@ -128,7 +128,43 @@ const NewAntenna: React.FC<{
     [setListId],
   );
 
-  /*
+  const handleModeChange = useCallback(
+    ({ target: { value } }: React.ChangeEvent<HTMLSelectElement>) => {
+      if (value === 'stl') {
+        setStl(true);
+        setLtl(false);
+      } else if (value === 'ltl') {
+        setStl(false);
+        setLtl(true);
+      } else if (value === 'filtering') {
+        setStl(false);
+        setLtl(false);
+      }
+
+      setMode(value);
+    },
+    [setLtl, setStl, setMode, listId, setListId, lists],
+  );
+
+  const handleDestinationChange = useCallback(
+    ({ target: { value } }: React.ChangeEvent<HTMLSelectElement>) => {
+      if (value === 'list') {
+        setInsertFeeds(true);
+        if (listId === '0' && lists.length > 0) {
+          setListId(lists[0]?.id ?? '0');
+        }
+      } else if (value === 'home') {
+        setInsertFeeds(true);
+        // listId = 0
+      } else if (value === 'timeline') {
+        setInsertFeeds(false);
+      }
+
+      setDestination(value);
+    },
+    [setDestination, setListId, listId, lists],
+  );
+
   const handleWithMediaOnlyChange = useCallback(
     ({ target: { checked } }: React.ChangeEvent<HTMLInputElement>) => {
       setWithMediaOnly(checked);
@@ -142,7 +178,6 @@ const NewAntenna: React.FC<{
     },
     [setIgnoreReblog],
   );
-  */
 
   const handleSubmit = useCallback(() => {
     setSubmitting(true);
@@ -155,7 +190,7 @@ const NewAntenna: React.FC<{
           stl,
           ltl,
           insert_feeds: insertFeeds,
-          list_id: listId,
+          list_id: destination === 'list' ? listId : '0',
           with_media_only: withMediaOnly,
           ignore_reblog: ignoreReblog,
         }),
@@ -170,7 +205,7 @@ const NewAntenna: React.FC<{
           stl,
           ltl,
           insert_feeds: insertFeeds,
-          list_id: listId,
+          list_id: destination === 'list' ? listId : '0',
           with_media_only: withMediaOnly,
           ignore_reblog: ignoreReblog,
         }),
@@ -197,6 +232,7 @@ const NewAntenna: React.FC<{
     listId,
     withMediaOnly,
     ignoreReblog,
+    destination,
   ]);
 
   return (
@@ -240,32 +276,40 @@ const NewAntenna: React.FC<{
           </div>
 
           <div className='fields-group'>
-            {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-            <label className='app-form__toggle'>
-              <div className='app-form__toggle__label'>
-                <strong>
-                  <FormattedMessage
-                    id='antennas.insert_feeds'
-                    defaultMessage='Insert to feeds'
-                  />
-                </strong>
-                <span className='hint'>
-                  <FormattedMessage
-                    id='antennas.insert_feeds_hint'
-                    defaultMessage='Insert to any timelines.'
-                  />
-                </span>
-              </div>
+            <div className='input with_label'>
+              <div className='label_input'>
+                <label htmlFor='antenna_list'>
+                  <FormattedMessage id='antennas.mode' defaultMessage='Mode' />
+                </label>
 
-              <div className='app-form__toggle__toggle'>
-                <div>
-                  <Toggle
-                    checked={insertFeeds}
-                    onChange={handleInsertFeedsChange}
-                  />
+                <div className='label_input__wrapper'>
+                  <select
+                    id='antenna_insert_list'
+                    value={mode}
+                    onChange={handleModeChange}
+                  >
+                    <FormattedMessage
+                      id='antennas.mode.stl'
+                      defaultMessage='Social timeline mode'
+                    >
+                      {(msg) => <option value='stl'>{msg}</option>}
+                    </FormattedMessage>
+                    <FormattedMessage
+                      id='antennas.mode.ltl'
+                      defaultMessage='Local timeline mode'
+                    >
+                      {(msg) => <option value='ltl'>{msg}</option>}
+                    </FormattedMessage>
+                    <FormattedMessage
+                      id='antennas.mode.filtering'
+                      defaultMessage='Filtering'
+                    >
+                      {(msg) => <option value='filtering'>{msg}</option>}
+                    </FormattedMessage>
+                  </select>
                 </div>
               </div>
-            </label>
+            </div>
           </div>
 
           <div className='fields-group'>
@@ -273,36 +317,134 @@ const NewAntenna: React.FC<{
               <div className='label_input'>
                 <label htmlFor='antenna_list'>
                   <FormattedMessage
-                    id='antennas.insert_list'
-                    defaultMessage='List'
+                    id='antennas.destination'
+                    defaultMessage='Destination'
                   />
                 </label>
 
                 <div className='label_input__wrapper'>
                   <select
-                    id='antenna_insert_list'
-                    value={listId}
-                    onChange={handleListIdChange}
+                    id='antenna_insert_destination'
+                    value={destination}
+                    onChange={handleDestinationChange}
                   >
-                    <option value=''>Home</option>
-                    {lists.forEach(
-                      (list) =>
-                        list !== null && (
-                          <option key={list.id} value={list.id}>
-                            {list.title}
-                          </option>
-                        ),
-                    )}
+                    <FormattedMessage
+                      id='antennas.destination.home'
+                      defaultMessage='Insert to home'
+                    >
+                      {(msg) => <option value='home'>{msg}</option>}
+                    </FormattedMessage>
+                    <FormattedMessage
+                      id='antennas.destination.list'
+                      defaultMessage='Insert to list'
+                    >
+                      {(msg) => <option value='list'>{msg}</option>}
+                    </FormattedMessage>
+                    <FormattedMessage
+                      id='antennas.destination.timeline'
+                      defaultMessage='Antenna timeline only'
+                    >
+                      {(msg) => <option value='timeline'>{msg}</option>}
+                    </FormattedMessage>
                   </select>
                 </div>
               </div>
             </div>
           </div>
 
-          {id && (
+          {destination === 'list' && (
             <div className='fields-group'>
-              <FiltersLink id={id} />
+              <div className='input with_label'>
+                <div className='label_input'>
+                  <label htmlFor='antenna_list'>
+                    <FormattedMessage
+                      id='antennas.insert_list'
+                      defaultMessage='List'
+                    />
+                  </label>
+
+                  <div className='label_input__wrapper'>
+                    <select
+                      id='antenna_insert_list'
+                      value={listId}
+                      onChange={handleListIdChange}
+                    >
+                      {lists.map((list) => (
+                        <option key={list.id} value={list.id}>
+                          {list.title}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
             </div>
+          )}
+
+          {id && mode === 'filtering' && (
+            <>
+              <div className='fields-group'>
+                <FiltersLink id={id} />
+              </div>
+
+              <div className='fields-group'>
+                {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+                <label className='app-form__toggle'>
+                  <div className='app-form__toggle__label'>
+                    <strong>
+                      <FormattedMessage
+                        id='antennas.media_only'
+                        defaultMessage='Media only'
+                      />
+                    </strong>
+                    <span className='hint'>
+                      <FormattedMessage
+                        id='antennas.media_only_hint'
+                        defaultMessage='Only posts with media will be added antenna.'
+                      />
+                    </span>
+                  </div>
+
+                  <div className='app-form__toggle__toggle'>
+                    <div>
+                      <Toggle
+                        checked={withMediaOnly}
+                        onChange={handleWithMediaOnlyChange}
+                      />
+                    </div>
+                  </div>
+                </label>
+              </div>
+
+              <div className='fields-group'>
+                {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+                <label className='app-form__toggle'>
+                  <div className='app-form__toggle__label'>
+                    <strong>
+                      <FormattedMessage
+                        id='antennas.ignore_reblog'
+                        defaultMessage='Exclude boosts'
+                      />
+                    </strong>
+                    <span className='hint'>
+                      <FormattedMessage
+                        id='antennas.ignore_reblog_hint'
+                        defaultMessage='Boosts will be excluded from antenna detection.'
+                      />
+                    </span>
+                  </div>
+
+                  <div className='app-form__toggle__toggle'>
+                    <div>
+                      <Toggle
+                        checked={ignoreReblog}
+                        onChange={handleIgnoreReblogChange}
+                      />
+                    </div>
+                  </div>
+                </label>
+              </div>
+            </>
           )}
 
           <div className='actions'>

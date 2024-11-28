@@ -50,7 +50,7 @@ export const ListPanel = () => {
         <ColumnLink icon='list-ul' key={list.get('id')} iconComponent={ListAltIcon} activeIconComponent={ListAltActiveIcon} text={list.get('title')} to={`/lists/${list.get('id')}`} transparent />
       ))}
       {antennas && antennas.map(antenna => (
-        <ColumnLink icon='wifi' key={antenna.get('id')} iconComponent={AntennaIcon} activeIconComponent={AntennaIcon} text={antenna.get('title')} to={`/antennast/${antenna.get('id')}`} transparent />
+        <ColumnLink icon='wifi' key={antenna.get('id')} iconComponent={AntennaIcon} activeIconComponent={AntennaIcon} text={antenna.get('title')} to={`/antennas/${antenna.get('id')}`} transparent />
       ))}
     </div>
   );

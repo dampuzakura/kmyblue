@@ -202,20 +202,8 @@ export function AntennaAdder () {
   return import(/*webpackChunkName: "features/antenna_adder" */'../../antenna_adder');
 }
 
-export function AntennaEditor () {
-  return import(/*webpackChunkName: "features/antenna_editor" */'../../antenna_editor');
-}
-
 export function CircleAdder () {
   return import(/*webpackChunkName: "features/circle_adder" */'../../circle_adder');
-}
-
-export function CircleEditor () {
-  return import(/*webpackChunkName: "features/circle_editor" */'../../circle_editor');
-}
-
-export function AntennaSetting () {
-  return import(/*webpackChunkName: "features/antenna_setting" */'../../antenna_setting');
 }
 
 export function Tesseract () {
@@ -302,8 +290,8 @@ export function AntennaMembers () {
   return import(/* webpackChunkName: "features/antennas" */'../../antennas/members');
 }
 
-export function AntennaExcludeMembers () {
-  return import(/* webpackChunkName: "features/antennas" */'../../antennas/exclude_members');
+export function AntennaSetting () {
+  return import(/*webpackChunkName: "features/antennas/filtering" */'../../antennas/filtering');
 }
 
 export function CircleEdit () {

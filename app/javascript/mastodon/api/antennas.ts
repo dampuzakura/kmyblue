@@ -24,9 +24,12 @@ export const apiGetExcludeAccounts = (antennaId: string) =>
   });
 
 export const apiGetDomains = (antennaId: string) =>
-  apiRequestGet<string[]>(`v1/antennas/${antennaId}/domains`, {
-    limit: 0,
-  });
+  apiRequestGet<{ domains: string[]; exclude_domains: string[] }>(
+    `v1/antennas/${antennaId}/domains`,
+    {
+      limit: 0,
+    },
+  );
 
 export const apiAddDomain = (antennaId: string, domain: string) =>
   apiRequestPost(`v1/antennas/${antennaId}/domains`, {
@@ -38,29 +41,70 @@ export const apiRemoveDomain = (antennaId: string, domain: string) =>
     domains: [domain],
   });
 
-export const apiGetExcludeDomains = (antennaId: string) =>
-  apiRequestGet<string[]>(`v1/antennas/${antennaId}/exclude_domains`, {
-    limit: 0,
+export const apiAddExcludeDomain = (antennaId: string, domain: string) =>
+  apiRequestPost(`v1/antennas/${antennaId}/exclude_domains`, {
+    domains: [domain],
+  });
+
+export const apiRemoveExcludeDomain = (antennaId: string, domain: string) =>
+  apiRequestDelete(`v1/antennas/${antennaId}/exclude_domains`, {
+    domains: [domain],
   });
 
 export const apiGetTags = (antennaId: string) =>
-  apiRequestGet<string[]>(`v1/antennas/${antennaId}/tags`, {
-    limit: 0,
+  apiRequestGet<{ tags: string[]; exclude_tags: string[] }>(
+    `v1/antennas/${antennaId}/tags`,
+    {
+      limit: 0,
+    },
+  );
+
+export const apiAddTag = (antennaId: string, tag: string) =>
+  apiRequestPost(`v1/antennas/${antennaId}/tags`, {
+    tags: [tag],
   });
 
-export const apiGetExcludeTags = (antennaId: string) =>
-  apiRequestGet<string[]>(`v1/antennas/${antennaId}/exclude_tags`, {
-    limit: 0,
+export const apiRemoveTag = (antennaId: string, tag: string) =>
+  apiRequestDelete(`v1/antennas/${antennaId}/tags`, {
+    tags: [tag],
+  });
+
+export const apiAddExcludeTag = (antennaId: string, tag: string) =>
+  apiRequestPost(`v1/antennas/${antennaId}/exclude_tags`, {
+    tags: [tag],
+  });
+
+export const apiRemoveExcludeTag = (antennaId: string, tag: string) =>
+  apiRequestDelete(`v1/antennas/${antennaId}/exclude_tags`, {
+    tags: [tag],
   });
 
 export const apiGetKeywords = (antennaId: string) =>
-  apiRequestGet<string[]>(`v1/antennas/${antennaId}/keywords`, {
-    limit: 0,
+  apiRequestGet<{ keywords: string[]; exclude_keywords: string[] }>(
+    `v1/antennas/${antennaId}/keywords`,
+    {
+      limit: 0,
+    },
+  );
+
+export const apiAddKeyword = (antennaId: string, keyword: string) =>
+  apiRequestPost(`v1/antennas/${antennaId}/keywords`, {
+    keywords: [keyword],
   });
 
-export const apiGetExcludeKeywords = (antennaId: string) =>
-  apiRequestGet<string[]>(`v1/antennas/${antennaId}/exclude_keywords`, {
-    limit: 0,
+export const apiRemoveKeyword = (antennaId: string, keyword: string) =>
+  apiRequestDelete(`v1/antennas/${antennaId}/keywords`, {
+    keywords: [keyword],
+  });
+
+export const apiAddExcludeKeyword = (antennaId: string, keyword: string) =>
+  apiRequestPost(`v1/antennas/${antennaId}/exclude_keywords`, {
+    keywords: [keyword],
+  });
+
+export const apiRemoveExcludeKeyword = (antennaId: string, keyword: string) =>
+  apiRequestDelete(`v1/antennas/${antennaId}/exclude_keywords`, {
+    keywords: [keyword],
   });
 
 export const apiGetAccountAntennas = (accountId: string) =>

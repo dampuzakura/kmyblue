@@ -8386,11 +8386,14 @@ noscript {
 
   i.fa {
     color: $darker-text-color;
+    width: 24px;
+    height: 24px;
   }
 
   .label {
     flex: 1;
     margin: 0 8px;
+    line-height: 24px;
   }
 }
 
