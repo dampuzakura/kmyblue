@@ -258,6 +258,16 @@ const NewList: React.FC<{
               <MembersLink id={id} />
             </div>
           )}
+          {!id && (
+            <div className='fields-group'>
+              <div className='app-form__memo'>
+                <FormattedMessage
+                  id='lists.save_to_edit_member'
+                  defaultMessage='You can edit list members after saving.'
+                />
+              </div>
+            </div>
+          )}
 
           <div className='fields-group'>
             {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}

@@ -358,8 +358,8 @@ const NewAntenna: React.FC<{
                 <div className='label_input'>
                   <label htmlFor='antenna_list'>
                     <FormattedMessage
-                      id='antennas.insert_list'
-                      defaultMessage='List'
+                      id='antennas.list_selection'
+                      defaultMessage='List to insert'
                     />
                   </label>
 
@@ -382,11 +382,24 @@ const NewAntenna: React.FC<{
           )}
 
           {id && mode === 'filtering' && (
-            <>
-              <div className='fields-group'>
-                <FiltersLink id={id} />
-              </div>
+            <div className='fields-group'>
+              <FiltersLink id={id} />
+            </div>
+          )}
 
+          {!id && mode === 'filtering' && (
+            <div className='fields-group'>
+              <div className='app-form__memo'>
+                <FormattedMessage
+                  id='antennas.save_to_edit_filtering'
+                  defaultMessage='You can edit the filtering after saving.'
+                />
+              </div>
+            </div>
+          )}
+
+          {mode === 'filtering' && (
+            <>
               <div className='fields-group'>
                 {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
                 <label className='app-form__toggle'>

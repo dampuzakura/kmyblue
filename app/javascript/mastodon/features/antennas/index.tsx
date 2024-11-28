@@ -25,8 +25,6 @@ const messages = defineMessages({
   edit: { id: 'antennas.edit', defaultMessage: 'Edit antenna' },
   delete: { id: 'antennas.delete', defaultMessage: 'Delete antenna' },
   more: { id: 'status.more', defaultMessage: 'More' },
-  insert_list: { id: 'antennas.insert_list', defaultMessage: 'List' },
-  insert_home: { id: 'antennas.insert_home', defaultMessage: 'Home' },
 });
 
 const AntennaItem: React.FC<{
@@ -35,7 +33,9 @@ const AntennaItem: React.FC<{
   insert_feeds: boolean;
   isList: boolean;
   listTitle?: string;
-}> = ({ id, title, insert_feeds, isList, listTitle }) => {
+  stl: boolean;
+  ltl: boolean;
+}> = ({ id, title, insert_feeds, isList, listTitle, stl, ltl }) => {
   const dispatch = useAppDispatch();
   const intl = useIntl();
 
@@ -62,15 +62,38 @@ const AntennaItem: React.FC<{
     <div className='lists__item'>
       <Link to={`/antennas/${id}`} className='lists__item__title'>
         <Icon id='antenna-ul' icon={AntennaIcon} />
-        <span>{title}</span>
-        {insert_feeds ? (
-          <span className='column-link__badge'>
-            {isList
-              ? (listTitle?.slice(0, 4) ??
-                intl.formatMessage(messages.insert_list))
-              : intl.formatMessage(messages.insert_home)}
-          </span>
-        ) : undefined}
+        <span>
+          {title}
+
+          {stl && (
+            <span className='column-link__badge'>
+              <FormattedMessage id='antennas.badge_stl' defaultMessage='STL' />
+            </span>
+          )}
+          {ltl && (
+            <span className='column-link__badge'>
+              <FormattedMessage id='antennas.badge_ltl' defaultMessage='LTL' />
+            </span>
+          )}
+
+          {insert_feeds && (
+            <span className='lists__item__memo'>
+              {isList && listTitle && (
+                <FormattedMessage
+                  id='antennas.memo_insert_list'
+                  defaultMessage='List: "{title}"'
+                  values={{ title: listTitle }}
+                />
+              )}
+              {!isList && (
+                <FormattedMessage
+                  id='antennas.memo_insert_home'
+                  defaultMessage='Inserts home timeline.'
+                />
+              )}
+            </span>
+          )}
+        </span>
       </Link>
 
       <DropdownMenuContainer
@@ -149,6 +172,8 @@ const Antennas: React.FC<{
             insert_feeds={antenna.insert_feeds}
             isList={!!antenna.list}
             listTitle={antenna.list?.title}
+            stl={antenna.stl}
+            ltl={antenna.ltl}
           />
         ))}
       </ScrollableList>

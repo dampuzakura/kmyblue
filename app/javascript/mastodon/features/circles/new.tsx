@@ -173,6 +173,16 @@ const NewCircle: React.FC<{
               <MembersLink id={id} />
             </div>
           )}
+          {!id && (
+            <div className='fields-group'>
+              <div className='app-form__memo'>
+                <FormattedMessage
+                  id='circles.save_to_edit_member'
+                  defaultMessage='You can edit circle members after saving.'
+                />
+              </div>
+            </div>
+          )}
 
           <div className='actions'>
             <button className='button' type='submit'>

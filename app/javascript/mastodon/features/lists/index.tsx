@@ -58,12 +58,18 @@ const ListItem: React.FC<{
     <div className='lists__item'>
       <Link to={`/lists/${id}`} className='lists__item__title'>
         <Icon id='list-ul' icon={ListAltIcon} />
-        <span>{title}</span>
-        {antennaTitles?.map((at) => (
-          <span key={at} className='column-link__badge'>
-            {at.slice(0, 4)}
-          </span>
-        ))}
+        <span>
+          {title}
+          {antennaTitles?.map((at) => (
+            <span key={at} className='lists__item__memo'>
+              <FormattedMessage
+                id='lists.memo_related_antenna'
+                defaultMessage='Antenna: "{title}"'
+                values={{ title: at }}
+              />
+            </span>
+          ))}
+        </span>
       </Link>
 
       <DropdownMenuContainer

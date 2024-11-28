@@ -159,6 +159,7 @@ const AccountItem: React.FC<{
               <ShortNumber
                 value={account.followers_count}
                 renderer={FollowersCounter}
+                isHide={account.other_settings.hide_followers_count}
               />{' '}
               {firstVerifiedField && (
                 <VerifiedBadge link={firstVerifiedField.value} />

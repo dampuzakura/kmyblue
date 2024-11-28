@@ -1411,6 +1411,12 @@ code {
       }
     }
   }
+
+  &__memo {
+    color: $dark-text-color;
+    font-size: 14px;
+    margin: 16px 0;
+  }
 }
 
 .avatar-pile {

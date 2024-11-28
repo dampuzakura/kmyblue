@@ -105,7 +105,7 @@ const Account = ({ size = 46, account, onBlock, onMute, onMuteNotifications, hid
     } else {
       buttons = <FollowButton accountId={account.get('id')} />;
     }
-  } else {
+  } else if (!hideButtons) {
     buttons = <FollowButton accountId={account.get('id')} />;
   }
 
