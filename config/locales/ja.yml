@@ -1322,17 +1322,11 @@ ja:
     hint_html: 他のアカウントからこのアカウントにフォロワーを引き継いで引っ越したい場合、ここでエイリアスを作成しておく必要があります。エイリアス自体は<strong>無害で、取り消す</strong>ことができます。<strong>引っ越しは以前のアカウント側から開始する必要があります</strong>。
     remove: エイリアスを削除
   antennas:
-    contexts:
-      account: アカウント
-      domain: ドメイン
-      keyword: キーワード
-      tag: ハッシュタグ
-    edit:
-      available: 有効
-      description: アンテナは、サーバーが認識した全ての公開・ローカル公開投稿のうち、購読を拒否していないすべてのアカウントからの投稿が対象です。検出された投稿は、指定したリストに追加されます。
-      title: アンテナを編集
     errors:
-      empty_contexts: 絞り込み条件が1つも指定されていないため無効です（除外条件はカウントされません）
+      duplicate_account: 重複アカウント
+      duplicate_domain: 重複ドメイン
+      duplicate_keyword: 重複キーワード
+      duplicate_tag: 重複タグ
       invalid_list_owner: これはあなたのリストではありません
       limit:
         accounts: 登録できるアカウント数の上限に達しています
@@ -1343,23 +1337,6 @@ ja:
       over_ltl_limit: 所持できるLTLモード付きアンテナ数 (ホーム/リストそれぞれにつき%{limit}) を超えています
       over_stl_limit: 所持できるSTLモード付きアンテナ数 (ホーム/リストそれぞれにつき%{limit}) を超えています
       too_short_keyword: キーワードが短すぎます
-    index:
-      accounts:
-        other: "%{count}件のアカウント"
-      contexts: "%{contexts}のアンテナ"
-      delete: 削除
-      disabled: 無効
-      domains:
-        other: "%{count}件のドメイン"
-      empty: アンテナはありません。
-      expires_in: "%{distance}で期限切れ"
-      expires_on: 有効期限 %{date}
-      keywords:
-        other: "%{count}件のキーワード"
-      stl: STLモードが適用されます。購読拒否設定は無視されます。
-      tags:
-        other: "%{count}件のタグ"
-      title: アンテナ
   appearance:
     advanced_web_interface: 上級者向けUI
     advanced_web_interface_hint: ディスプレイを幅いっぱいまで活用したい場合、上級者向け UI をおすすめします。ホーム、通知、連合タイムライン、更にはリストやハッシュタグなど、様々な異なるカラムから望む限りの情報を一度に受け取れるような設定が可能になります。

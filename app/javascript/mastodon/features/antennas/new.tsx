@@ -33,7 +33,7 @@ const FiltersLink: React.FC<{
         <strong>
           <FormattedMessage
             id='antennas.filter_items'
-            defaultMessage='Antenna filter settings'
+            defaultMessage='Move to antenna filter setting'
           />
         </strong>
       </div>
@@ -61,7 +61,7 @@ const NewAntenna: React.FC<{
   const [withMediaOnly, setWithMediaOnly] = useState(false);
   const [ignoreReblog, setIgnoreReblog] = useState(false);
   const [mode, setMode] = useState('filtering');
-  const [destination, setDestination] = useState('home');
+  const [destination, setDestination] = useState('timeline');
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -143,7 +143,7 @@ const NewAntenna: React.FC<{
 
       setMode(value);
     },
-    [setLtl, setStl, setMode, listId, setListId, lists],
+    [setLtl, setStl, setMode],
   );
 
   const handleDestinationChange = useCallback(

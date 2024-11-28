@@ -148,7 +148,7 @@
   "antennas.exclude_domains": "Exclude domains",
   "antennas.exclude_keywords": "Exclude keywords",
   "antennas.exclude_tags": "Exclude tags",
-  "antennas.filter_items": "Antenna filter settings",
+  "antennas.filter_items": "Move to antenna filter setting",
   "antennas.filter_not": "Filter Not",
   "antennas.find_users_to_add": "Find users to add",
   "antennas.ignore_reblog": "Exclude boosts",
