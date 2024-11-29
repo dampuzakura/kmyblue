@@ -1342,21 +1342,11 @@ en:
     hint_html: If you want to move from another account to this one, here you can create an alias, which is required before you can proceed with moving followers from the old account to this one. This action by itself is <strong>harmless and reversible</strong>. <strong>The account migration is initiated from the old account</strong>.
     remove: Unlink alias
   antennas:
-    contexts:
-      account: Accounts
-      domain: Domains
-      keyword: Keywords
-      tag: Tags
-    edit:
-      available: Available
-      description: Antenna is for all public and local public posts recognized by the server, from all accounts that have not refused to subscribe. Detected posts will be added to the specified list.
-      title: Edit antenna
     errors:
       duplicate_account: Duplicate account
       duplicate_domain: Duplicate domain
       duplicate_keyword: Duplicate keyword
       duplicate_tag: Duplicate tag
-      empty_contexts: No contexts! You must set any context filters
       invalid_list_owner: This list is not yours
       limit:
         accounts: 登録できるアカウント数の上限に達しています
@@ -1367,23 +1357,6 @@ en:
       over_ltl_limit: You have exceeded the limit of %{limit} ltl antennas
       over_stl_limit: You have exceeded the limit of %{limit} stl antennas
       too_short_keyword: Keyword is too short
-    index:
-      accounts:
-        other: "%{count} accounts"
-      contexts: Antennas in %{contexts}
-      delete: Delete
-      disabled: Disabled
-      domains:
-        other: "%{count} domains"
-      empty: You have no antennas.
-      expires_in: Expires in %{distance}
-      expires_on: Expires on %{date}
-      keywords:
-        other: "%{count} keywords"
-      stl: This antenna is in STL mode, ignoring reject-subscription settings.
-      tags:
-        other: "%{count} tags"
-      title: Antennas
   appearance:
     advanced_web_interface: Advanced web interface
     advanced_web_interface_hint: 'If you want to make use of your entire screen width, the advanced web interface allows you to configure many different columns to see as much information at the same time as you want: Home, notifications, federated timeline, any number of lists and hashtags.'
