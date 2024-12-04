@@ -28,7 +28,7 @@ class FeedInsertWorker
       check_and_insert
     end
 
-    perform_notify_for_list if !feed_filtered? && notify_for_list?
+    perform_notify_for_list if !feed_filter && notify_for_list?
   rescue ActiveRecord::RecordNotFound
     true
   end
