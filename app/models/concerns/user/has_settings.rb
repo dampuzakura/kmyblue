@@ -131,6 +131,10 @@ module User::HasSettings
     settings['reject_send_limited_to_suspects']
   end
 
+  def setting_system_scrollbars_ui
+    settings['web.use_system_scrollbars']
+  end
+
   def setting_noindex
     settings['noindex']
   end

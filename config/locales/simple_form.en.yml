@@ -84,6 +84,7 @@ en:
         setting_show_application: 投稿するのに使用したアプリが投稿の詳細ビューに表示されるようになります
         setting_stay_privacy: If you choose to enable this setting, please consider manually setting the visibility of the boost
         setting_stop_emoji_reaction_streaming: Helps to save communication capacity.
+        setting_system_scrollbars_ui: Applies only to desktop browsers based on Safari and Chrome
         setting_use_blurhash: Gradients are based on the colors of the hidden visuals but obfuscate any details
         setting_use_pending_items: Hide timeline updates behind a click instead of automatically scrolling the feed
         username: You can use letters, numbers, and underscores
@@ -324,6 +325,7 @@ en:
         setting_stay_privacy: Keep visibility after post
         setting_stop_emoji_reaction_streaming: Disable emoji reaction streamings
         setting_system_font_ui: Use system's default font
+        setting_system_scrollbars_ui: Use system's default scrollbar
         setting_theme: Site theme
         setting_translatable_private: Allow other users translation of your private posts
         setting_trends: Show today's trends

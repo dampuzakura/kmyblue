@@ -13,7 +13,7 @@ import AntennaIcon from '@/material-icons/400-24px/wifi.svg?react';
 import { fetchAntenna } from 'mastodon/actions/antennas';
 import { createAntenna, updateAntenna } from 'mastodon/actions/antennas_typed';
 import { fetchLists } from 'mastodon/actions/lists';
-import Column from 'mastodon/components/column';
+import { Column } from 'mastodon/components/column';
 import { ColumnHeader } from 'mastodon/components/column_header';
 import { LoadingIndicator } from 'mastodon/components/loading_indicator';
 import { getOrderedLists } from 'mastodon/selectors/lists';
