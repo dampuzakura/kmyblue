@@ -202,7 +202,7 @@ RSpec.describe FeedManager do
         antenna.accounts << bob
         allow(Antenna).to receive(:where).and_return(antenna)
         status = Fabricate(:status, text: 'I post a lot', account: bob)
-        expect(described_class.instance.filter?(:home, status, alice)).to be true
+        expect(subject.filter?(:home, status, alice)).to be true
       end
 
       it 'returns true for reblog from followee on exclusive antenna' do
@@ -212,7 +212,7 @@ RSpec.describe FeedManager do
         allow(Antenna).to receive(:where).and_return(antenna)
         status = Fabricate(:status, text: 'I post a lot', account: bob)
         reblog = Fabricate(:status, reblog: status, account: jeff)
-        expect(described_class.instance.filter?(:home, reblog, alice)).to be true
+        expect(subject.filter?(:home, reblog, alice)).to be true
       end
 
       it 'returns false for post from followee on non-exclusive antenna' do
@@ -220,7 +220,7 @@ RSpec.describe FeedManager do
         alice.follow!(bob)
         antenna.accounts << bob
         status = Fabricate(:status, text: 'I post a lot', account: bob)
-        expect(described_class.instance.filter?(:home, status, alice)).to be false
+        expect(subject.filter?(:home, status, alice)).to be false
       end
 
       it 'returns false for reblog from followee on non-exclusive antenna' do
@@ -229,7 +229,7 @@ RSpec.describe FeedManager do
         antenna.accounts << jeff
         status = Fabricate(:status, text: 'I post a lot', account: bob)
         reblog = Fabricate(:status, reblog: status, account: jeff)
-        expect(described_class.instance.filter?(:home, reblog, alice)).to be false
+        expect(subject.filter?(:home, reblog, alice)).to be false
       end
     end
 
