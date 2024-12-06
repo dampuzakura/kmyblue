@@ -7,7 +7,7 @@ class RemoveBoostsWideningAudience < ActiveRecord::Migration[5.2]
     add_column :statuses, :searchability, :integer
     add_column :statuses, :limited_scope, :integer
 
-    public_boosts = Status.find_by_sql(<<-SQL.squish)
+    Status.find_by_sql(<<-SQL.squish)
       SELECT boost.id
       FROM statuses AS boost
       LEFT JOIN statuses AS boosted ON boost.reblog_of_id = boosted.id
@@ -21,7 +21,6 @@ class RemoveBoostsWideningAudience < ActiveRecord::Migration[5.2]
 
     # Sorry, but remove to fix test
     # RemovalWorker.push_bulk(public_boosts.pluck(:id))
-    Status.where(id: public_boosts.pluck(:id)).delete_all
 
     remove_column :statuses, :searchability
     remove_column :statuses, :limited_scope
