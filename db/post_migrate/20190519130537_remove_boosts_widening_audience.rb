@@ -4,8 +4,8 @@ class RemoveBoostsWideningAudience < ActiveRecord::Migration[5.2]
   disable_ddl_transaction!
 
   def up
-    add_column :statuses, :searchability, :integer
-    add_column :statuses, :limited_scope, :integer
+    # add_column :statuses, :searchability, :integer
+    # add_column :statuses, :limited_scope, :integer
 
     Status.find_by_sql(<<-SQL.squish)
       SELECT boost.id
@@ -22,8 +22,8 @@ class RemoveBoostsWideningAudience < ActiveRecord::Migration[5.2]
     # Sorry, but remove to fix test
     # RemovalWorker.push_bulk(public_boosts.pluck(:id))
 
-    remove_column :statuses, :searchability
-    remove_column :statuses, :limited_scope
+    # remove_column :statuses, :searchability
+    # remove_column :statuses, :limited_scope
   end
 
   def down
