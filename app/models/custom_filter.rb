@@ -5,17 +5,17 @@
 # Table name: custom_filters
 #
 #  id                 :bigint(8)        not null, primary key
-#  account_id         :bigint(8)
-#  expires_at         :datetime
-#  phrase             :text             default(""), not null
-#  context            :string           default([]), not null, is an Array
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
 #  action             :integer          default("warn"), not null
+#  context            :string           default([]), not null, is an Array
 #  exclude_follows    :boolean          default(FALSE), not null
 #  exclude_localusers :boolean          default(FALSE), not null
-#  with_quote         :boolean          default(TRUE), not null
+#  expires_at         :datetime
+#  phrase             :text             default(""), not null
 #  with_profile       :boolean          default(FALSE), not null
+#  with_quote         :boolean          default(TRUE), not null
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  account_id         :bigint(8)        not null
 #
 
 class CustomFilter < ApplicationRecord
